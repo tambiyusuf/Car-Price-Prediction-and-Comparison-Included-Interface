@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Çıktısı</title>
+  <style>
+    /* Genel sıfırlamalar */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Konteyner */
+    .container {
+      text-align: center;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* Butonlar */
+    .button-container button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 15px 25px;
+      margin: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 200px;
+      transition: background-color 0.3s ease;
+    }
+
+    .button-container button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Fiyat ve Model Çıktısı */
+    .output {
+      background-color: #e9ecef;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 8px;
+      font-size: 20px;
+      color: #333;
+      min-height: 100px;
+    }
+
+    .output h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    /* Fiyat Büyüklüğü */
+    .price {
+      font-size: 40px;
+      font-weight: bold;
+      color: #007BFF;
+    }
+
+    /* Alt Yazı */
+    .footer-text {
+      margin-top: 30px;
+      font-size: 14px;
+      font-style: italic;
+      text-align: center;
+      color: #555;
+    }
+
+    .footer-text::before {
+      content: "* ";
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Model Çıktısı</h1>
+
+    <!-- Model Cevap Alanı -->
+    <div class="output" id="modelOutput">
+      <p id="responseText" class="price">{{ predicted_price }} ₺</p>
+    </div>
+
+    <!-- Tekrar Sorgu Yap Butonu -->
+    <div class="button-container">
+      <button onclick="window.location.href='/'">Tekrar Sorgu Yap</button>
+    </div>
+
+    <!-- Alt Yazı -->
+    <div class="footer-text">
+      Bu fiyat, belirtilen araç özelliklerine göre, Sahibinden.com sayfasından 15.10.2024 ve 15.11.2024 tarihinden sağlanan verilerle eğitilen model ile hesaplanmıştır.
+    </div>
+  </div>
+
+ 
+
+</body>
+</html>

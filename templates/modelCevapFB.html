@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiyat Karşılaştırma</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .status.pahali {
+      color: red;
+    }
+
+    .status.uygun {
+      color: green;
+    }
+
+    .details {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .details span {
+      font-weight: bold;
+    }
+
+    .button-container {
+      margin-top: 25px;
+    }
+
+    .button-container button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .button-container button:hover {
+      background-color: #0056b3;
+    }
+
+    .footer-text {
+      margin-top: 30px;
+      font-size: 14px;
+      font-style: italic;
+      color: #555;
+    }
+
+    .footer-text::before {
+      content: "* ";
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Fiyat Karşılaştırma Sonucu</h1>
+    <!-- Durum Bilgisi -->
+    <p class="status {{ status }}">{{ status_text }}</p>
+    <!-- Fiyat Detayları -->
+    <div class="details">
+      <p>Girilen Fiyat: <span>{{ fiyat }} ₺</span></p>
+      <p>Tahmini Fiyat: <span>{{ predicted_price }} ₺</span></p>
+      <p>Fiyat Farkı: <span>{{ fark }}%</span></p>
+    </div>
+    <div class="button-container">
+        <button onclick="window.location.href='/'">Tekrar Sorgu Yap</button>
+    </div>
+    <div class="footer-text">
+        Bu fiyat, belirtilen araç özelliklerine göre, Sahibinden.com sayfasından 15.10.2024 ve 15.11.2024 tarihinden sağlanan verilerle eğitilen model ile hesaplanmıştır.
+    </div>
+  </div>
+</body>
+</html>

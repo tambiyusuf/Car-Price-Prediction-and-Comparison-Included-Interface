@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fiyat İstiyorum</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f5f5f5;
+      }
+  
+      .container {
+        width: 90%;
+        max-width: 800px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+  
+      form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+  
+      .left,
+      .right {
+        flex: 1;
+        min-width: 250px;
+      }
+  
+      .form-group {
+        margin-bottom: 15px;
+      }
+  
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+  
+      select,
+      input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+  
+      .radio-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+  
+      .radio-group label {
+        font-weight: normal;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+  
+      .form-group.radio-group label input {
+        margin: 0;
+      }
+  
+      input[type="submit"] {
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        margin-top: 10px;
+      }
+  
+      input[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+  
+      @media (max-width: 768px) {
+        form {
+          flex-direction: column;
+        }
+  
+        .left,
+        .right {
+          flex: none;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form action="/predict" method="post">
+        <!-- Sol Taraf: ComboBoxlar -->
+        <div class="left">
+          <div class="form-group">
+            <label for="marka">Marka</label>
+            <select id="marka" name="marka" onchange="updateSeri()">
+              <option value="">Seçin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="seri">Seri</label>
+            <select id="seri" name="seri" onchange="updateUstModel()">
+              <option value="">Seçin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ust_model">Üst Model</label>
+            <select id="ust_model" name="ust_model" onchange="updateAltModel()">
+              <option value="">Seçin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="alt_model">Alt Model</label>
+            <select id="alt_model" name="alt_model" onchange="updateYil()">
+              <option value="">Seçin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="yil">Yıl</label>
+            <select id="yil" name="yil">
+              <option value="">Seçin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="sehir">Şehir</label>
+            <select id="sehir" name="sehir">
+              <option value="">Seçin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="kimden">Kimden</label>
+            <select id="kimden" name="kimden">
+              <option value="">Seçin</option>
+              <option value="Sahibinden">Sahibinden</option>
+              <option value="Yetkili Bayiden">Yetkili Bayiden</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="renk">Renk</label>
+            <select id="renk" name="renk">
+              <option value="">Seçin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="yakit">Yakıt Tipi</label>
+            <select id="yakit" name="yakit">
+              <option value="">Seçin</option>
+              <!-- Yakıt Tipi seçenekleri JavaScript ile dinamik olarak eklenecek -->
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="kasa">Kasa Tipi</label>
+            <select id="kasa" name="kasa">
+              <option value="">Seçin</option>
+              <!-- Kasa Tipi seçenekleri JavaScript ile dinamik olarak eklenecek -->
+            </select>
+          </div>
+        </div>
+  
+        <!-- Sağ Taraf: Sayısal Girdi ve Radio Buttonlar -->
+        <div class="right">
+          <div class="form-group">
+            <label for="km">Kilometre</label>
+            <input type="number" id="km" name="km" step="any" />
+          </div>
+          <div class="form-group">
+            <label for="motor_hacim">Motor Hacmi</label>
+            <input type="number" id="motor_hacim" name="motor_hacim" step="any" />
+          </div>
+          <div class="form-group">
+            <label for="hp">HP</label>
+            <input type="number" id="hp" name="hp" step="any" />
+          </div>
+          <div class="form-group">
+            <label for="kapi">Kapı Sayısı</label>
+            <input type="number" id="kapi" name="kapi" step="any" />
+          </div>
+          <!-- Radio Buttonlar -->
+          <div class="form-group radio-group">
+            <label>Vites:</label>
+            <label><input type="radio" name="vites" value="Otomatik" /> Otomatik</label>
+            <label><input type="radio" name="vites" value="Manuel" /> Manuel</label>
+          </div>
+          <div class="form-group radio-group">
+            <label>Takas:</label>
+            <label><input type="radio" name="takas" value="Evet" /> Evet</label>
+            <label><input type="radio" name="takas" value="Hayır" /> Hayır</label>
+          </div>
+          <div class="form-group radio-group">
+            <label>Ağır Hasar:</label>
+            <label><input type="radio" name="agir_hasar" value="Evet" /> Evet</label>
+            <label><input type="radio" name="agir_hasar" value="Hayır" /> Hayır</label>
+          </div>
+          <div class="form-group radio-group">
+            <label>Garanti:</label>
+            <label><input type="radio" name="garanti" value="Var" /> Var</label>
+            <label><input type="radio" name="garanti" value="Yok" /> Yok</label>
+          </div>
+          <input type="submit" value="Yapay Zekaya Gönder" />
+        </div>
+      </form>
+    </div>
+
+    <script>
+      // Data ve Yakit_Kasa verilerini burada JSON formatında tanımlayabiliriz
+      const data = {
+        BMW: {
+          iX: {
+            "xDrive50": { "xDrive50": [2022, 2023, 2021] },
+            "xDrive40": {
+              "First Edition Sport": [2022, 2023, 2021],
+            },
+          },
+          X3: {
+            "20d xDrive": {
+              "2.0d xDrive": [2011, 2009, 2008, 2010, 2014, 2015, 2012],
+              "Comfort": [2012, 2013, 2011, 2014, 2010],
+              "Premium": [2012, 2011, 2013],
+            },
+            "20i sDrive": {
+              "X Line": [
+                2017, 2016, 2014, 2020, 2021, 2018, 2024, 2023, 2019, 2015,
+                2022,
+              ],
+              "M Sport": [2023, 2018, 2022, 2020, 2024, 2014, 2019, 2021],
+              "20i sDrive": [2016, 2014, 2015, 2018],
+              "Exclusive": [2014, 2015, 2016],
+            },
+          },
+          "X1": {
+            "16d sDrive": {
+              "M Sport": [2018, 2021, 2020, 2019, 2022],
+              "X Line": [2020, 2021, 2022, 2019, 2018, 2016],
+            },
+            "16i sDrive": {
+              "16i sDrive": [2014, 2015, 2013],
+              "X Line": [2013, 2014, 2015],
+            },
+            "18i sDrive": {
+              "18i sDrive": [2016],
+              "M Sport": [2016, 2022, 2020, 2017, 2021],
+              "X Line": [2016, 2022, 2019, 2017, 2018, 2020, 2015, 2021],
+              "Prestige": [2016, 2017],
+            },
+            "20d xDrive": {
+              "2.0d xDrive": [2010, 2011, 2012, 2015, 2013],
+            },
+          },
+          "X5": {
+            "25d xDrive": {
+              "25d xDrive": [2015, 2014, 2016],
+              "M Sport": [2014, 2016, 2015, 2017, 2018],
+            },
+            "30d": {
+              "30d": [2007, 2003, 2005, 2004, 2008, 2002, 2006, 2001],
+            },
+            "44": {
+              "44": [2001, 2002, 2000, 2003, 2004],
+            },
+          },
+          "1 Serisi": {
+            "1 Serisi": {
+              "116i Premium": [2008, 2011, 2007, 2010, 2009, 2012, 2014, 2005],
+              "116i Standart": [
+                2006, 2008, 2005, 2012, 2010, 2009, 2015, 2007, 2014,
+              ],
+            },
+          },
+          "4 Serisi": {
+            "4 Serisi": {
+              "420d M Sport": [2014, 2015, 2016, 2013],
+            },
+            "418i Gran Coupe": {
+              "M Sport": [2018, 2015, 2016, 2017],
+            },
+          },
+        },
+        "Fiat": {
+          "Egea": {
+            "1.3 Multijet": {
+              "Easy": [2022, 2020, 2016, 2019, 2017, 2018, 2021, 2023, 2024],
+            },
+          },
+          "Linea": {
+            "1.3 Multijet": {
+              "Active Plus": [2012, 2011, 2014, 2013, 2015, 2010],
+              Pop: [2016, 2017, 2012, 2015, 2014, 2018, 2013],
+            },
+          },
+        },
+        "Ford": {
+          "Puma": {
+            "1.0 EcoBoost": {
+              "Style": [2022, 2021, 2023, 2020, 2024],
+              "Hybrid": [2022, 2024, 2023],
+              "ST-Line": [2022, 2024, 2023],
+            },
+          },
+          "Kuga": {
+            "1.5 TDCI": {
+              "Titanium": [2019, 2018, 2017, 2020, 2023, 2021],
+              "Style": [2018, 2017, 2019],
+              "ST Line": [2018, 2017],
+            },
+            "1.5 EcoBlue": {
+              "ST Line": [2021, 2020, 2022, 2023],
+              "Titanium": [2020, 2022, 2021],
+            },
+            "1.5 EcoBoost": {
+              "Selective": [2015, 2016, 2014],
+              "Style": [2017, 2019, 2023],
+              "Trend X": [2014, 2015, 2016, 2017],
+              "Titanium": [2023, 2015, 2022, 2014, 2016, 2017, 2024, 2020],
+            },
+            "1.6 EcoBoost": {
+              "Selective": [2013, 2014],
+              "Titanium": [2014, 2013],
+              "Trend X": [2013, 2014, 2015],
+            },
+          },
+          "Ranger": {
+            "2.0 EcoBlue": {
+              "4x4 Wildtrak": [2021, 2022, 2020, 2023, 2024, 2019],
+            },
+            "2.2 TDCi": { "XLT": [2017, 2019, 2018, 2016, 2015, 2013, 2012] },
+            "2.5 TDCi": {
+              "XLT": [
+                2009, 2006, 2008, 2004, 2000, 2002, 2005, 2011, 2010, 2003,
+                2007, 2001,
+              ],
+              "XL": [2000, 2001, 2002, 2006, 2005, 2011, 2003, 1999, 2004],
+              "STD": [
+                2001, 1999, 2000, 2009, 2010, 2006, 2007, 2008, 2005, 2011,
+                2012, 2003,
+              ],
+            },
+            "3.2 TDCi": {
+              "Wild Trak": [2015, 2014, 2018, 2017, 2016, 2012, 2013],
+            },
+          },
+          Escort: {
+            "1.6 CLX": { "1.6 CLX": [1997, 1995, 1999, 1996, 1998, 1994] },
+          },
+          Fiesta: {
+            "1.4 TDCi Comfort": {
+              "1.4 TDCi Comfort": [2007, 2005, 2004, 2008, 2006, 2003],
+            },
+          },
+          Focus: {
+            "1.5 TDCi": { "Trend X": [2020, 2015, 2018, 2016, 2019, 2017] },
+          },
+          Mondeo: {
+            "2.0 Ghia": {
+              "2.0 Ghia": [
+                1998, 1995, 2002, 1999, 2005, 1996, 2000, 2001, 2007, 1997,
+                1993, 1994, 2004,
+              ],
+            },
+          },
+        },
+        Audi: {
+          A4: {
+            "A4 Sedan": {
+              "2.0 TDI": [2010, 2012, 2014, 2013, 2006, 2015, 2016, 2011, 2008],
+            },
+          },
+        },
+        "Alfa Romeo": {
+          Tonale: {
+            "1.6 D": {
+              Ti: [2023, 2022],
+            },
+            "1.5 Hybrid": {
+              Veloce: [2023, 2022],
+            },
+          },
+        },
+        Dodge: {
+          Nitro: {
+            "2.8 CRD": {
+              SXT: [2008, 2007, 2009, 2010],
+            },
+          },
+        },
+        Chevrolet: {
+          Cruze: {
+            1.6: {
+              LS: [2010, 2012, 2011, 2009],
+            },
+          },
+        },
+      };
+
+      const yakit_kasa = {
+        iX: {
+          yakit: ["Elektrik"],
+          kasa: { SUV: ["4x4"] },
+        },
+        X3: {
+          yakit: ["Dizel", "Benzin", "Benzin & LPG"],
+          kasa: {
+            SUV: ["4x4", "4x2 (Arkadan İtişli)", "4x2 (Önden Çekişlili)"],
+          },
+        },
+        X1: {
+          yakit: ["Dizel", "Benzin", "Benzin & LPG"],
+          kasa: { SUV: ["4x2 (Önden Çekişli)", "4x2 (Arkadan İtişli)", "4x4"] },
+        },
+        X5: {
+          yakit: ["Dizel", "Benzin & LPG", "Benzin"],
+          kasa: { SUV: ["4x4", "4x2 (Önden Çekişli)"] },
+        },
+        "1 Serisi": {
+          yakit: ["Benzin & LPG", "Benzin"],
+          kasa: ["Hatchback"],
+        },
+        "4 Serisi": {
+          yakit: ["Dizel", "Benzin"],
+          kasa: ["Coupe", "Cabrio", "Sedan"],
+        },
+        Egea: {
+          yakit: ["Dizel"],
+          kasa: ["Sedan"],
+        },
+        Linea: {
+          yakit: ["Dizel"],
+          kasa: ["Sedan"],
+        },
+        Puma: {
+          yakit: ["Benzin", "Hybrid"],
+          kasa: { SUV: ["4x2 (Önden Çekişli)"] },
+        },
+        Kuga: {
+          yakit: ["Dizel", "Benzin", "Benzin & LPG"],
+          kasa: { SUV: ["4x2 (Önden li)", "4x2 (Arkadan İtişli)", "4x4"] },
+        },
+        Ranger: {
+          yakit: ["Dizel"],
+          kasa: {
+            Pickup: ["4x4", "4x2 (Arkadan İtişli)"],
+            SUV: ["4x4", "4x2 (Arkadan İtişli)"],
+            Crossover: ["4x4", "4x2 (Arkadan İtişli)"],
+          },
+        },
+        Escort: {
+          yakit: ["Benzin & LPG", "Benzin"],
+          kasa: ["Sedan", "Hatchback", "Station Wagon"],
+        },
+        Fiesta: {
+          yakit: ["Dizel"],
+          kasa: ["Hatchback"],
+        },
+        Focus: {
+          yakit: ["Dizel"],
+          kasa: ["Sedan", "Hatchback"],
+        },
+        Mondeo: {
+          yakit: ["Benzin & LPG"],
+          kasa: ["Sedan", "Hatchback"],
+        },
+        A4: {
+          yakit: ["Dizel"],
+          kasa: ["Sedan"],
+        },
+        Tonale: {
+          yakit: ["Dizel", "Hybrid", "Benzin"],
+          kasa: { SUV: ["4x2 (Önden Çekişli)"] },
+        },
+        Nitro: {
+          yakit: ["Dizel"],
+          kasa: { SUV: ["4x4"] },
+        },
+        Cruze: {
+          yakit: ["Benzin & LPG", "Benzin"],
+          kasa: ["Sedan", "Hatchback"],
+        },
+      };
+      const sehir = [
+        "Muğla ",
+        "İstanbul ",
+        "Kocaeli ",
+        "Bursa ",
+        "Giresun ",
+        "Eskişehir ",
+        "Sakarya ",
+        "Ankara ",
+        "Afyonkarahisar ",
+        "Antalya ",
+        "Samsun ",
+        "Adana ",
+        "Adıyaman ",
+        "Konya ",
+        "İzmir ",
+        "Gaziantep ",
+        "Denizli ",
+        "Şanlıurfa ",
+        "Kayseri ",
+        "Mersin ",
+        "Diyarbakır ",
+        "Zonguldak ",
+        "Edirne ",
+        "Kırklareli ",
+        "Aydın ",
+        "Çanakkale ",
+        "Erzurum ",
+        "Trabzon ",
+        "Çorum ",
+        "Van ",
+        "Rize ",
+        "Amasya ",
+        "Manisa ",
+        "Mardin ",
+        "Elazığ ",
+        "Şırnak ",
+        "Balıkesir ",
+        "Ordu ",
+        "Hatay ",
+        "Muş ",
+        "Osmaniye ",
+        "Malatya ",
+        "Niğde ",
+        "Tekirdağ ",
+        "Kilis ",
+        "Aksaray ",
+        "Erzincan ",
+        "Bilecik ",
+        "Kırşehir ",
+        "Isparta ",
+        "Kütahya ",
+        "Kastamonu ",
+        "Tokat ",
+        "Düzce ",
+        "Kars ",
+        "Nevşehir ",
+        "Tunceli ",
+        "Karabük ",
+        "Bolu ",
+        "Bitlis ",
+        "Sivas ",
+        "Kahramanmaraş ",
+        "Uşak ",
+        "Yalova ",
+        "Bartın ",
+        "Burdur ",
+        "Karaman ",
+        "Kırıkkale ",
+        "Batman ",
+        "Bingöl ",
+        "Yozgat ",
+        "Artvin ",
+        "Çankırı ",
+        "Iğdır ",
+        "Sinop ",
+        "Siirt ",
+        "Hakkari ",
+        "Ağrı ",
+      ];
+
+      const kimden = ["Sahibinden", "Yetkili Bayiden"];
+
+      const renk = [
+        "Siyah",
+        "Gri",
+        "Kirmizi",
+        "Beyaz",
+        "Bej",
+        "Lacivert",
+        "Mavi",
+        "Füme",
+        "Gümüş Gri",
+        "Bordo",
+        "Yeşil",
+        "Kahverengi",
+        "Turuncu",
+        "Sari",
+        "Mor",
+        "Şampanya",
+      ];
+
+      // Marka seçeneklerini yükle
+      const markaSelect = document.getElementById("marka");
+      for (let marka in data) {
+        let option = document.createElement("option");
+        option.value = marka;
+        option.textContent = marka;
+        markaSelect.appendChild(option);
+      }
+
+      // Marka değişince Seri'yi güncelle
+      function updateSeri() {
+        const marka = markaSelect.value;
+        const seriSelect = document.getElementById("seri");
+        seriSelect.innerHTML = '<option value="">Seçin</option>'; // Önceki seçenekleri temizle
+
+        if (marka) {
+          const seriOptions = Object.keys(data[marka]);
+          seriOptions.forEach((seri) => {
+            let option = document.createElement("option");
+            option.value = seri;
+            option.textContent = seri;
+            seriSelect.appendChild(option);
+          });
+        }
+        updateYakitKasa();
+      }
+
+      // Seri değişince Üst Model'i güncelle
+      function updateUstModel() {
+        const marka = markaSelect.value;
+        const seri = document.getElementById("seri").value;
+        const ustModelSelect = document.getElementById("ust_model");
+        ustModelSelect.innerHTML = '<option value="">Seçin</option>'; // Önceki seçenekleri temizle
+
+        if (seri) {
+          const ustModels = Object.keys(data[marka][seri]);
+          ustModels.forEach((ustModel) => {
+            let option = document.createElement("option");
+            option.value = ustModel;
+            option.textContent = ustModel;
+            ustModelSelect.appendChild(option);
+          });
+        }
+        updateYakitKasa();
+      }
+
+      // Üst Model değişince Alt Model'i güncelle
+      function updateAltModel() {
+        const marka = markaSelect.value;
+        const seri = document.getElementById("seri").value;
+        const ustModel = document.getElementById("ust_model").value;
+        const altModelSelect = document.getElementById("alt_model");
+        altModelSelect.innerHTML = '<option value="">Seçin</option>'; // Önceki seçenekleri temizle
+
+        if (ustModel) {
+          const altModels = Object.keys(data[marka][seri][ustModel]);
+          altModels.forEach((altModel) => {
+            let option = document.createElement("option");
+            option.value = altModel;
+            option.textContent = altModel;
+            altModelSelect.appendChild(option);
+          });
+          updateYil(); // Yeni yıl güncelleme fonksiyonunu çağır
+        }
+        updateYakitKasa(); // Mevcut yakıt ve kasa tiplerini güncelle
+      }
+
+      // Alt Model seçilince Yıl güncelle
+      function updateYil() {
+        const marka = markaSelect.value;
+        const seri = document.getElementById("seri").value;
+        const ustModel = document.getElementById("ust_model").value;
+        const altModel = document.getElementById("alt_model").value;
+        const yilSelect = document.getElementById("yil");
+        yilSelect.innerHTML = '<option value="">Seçin</option>'; // Önceki seçenekleri temizle
+
+        if (altModel) {
+          // Yılları al
+          const years = data[marka][seri][ustModel][altModel] || [];
+          years.forEach((year) => {
+            let option = document.createElement("option");
+            option.value = year;
+            option.textContent = year;
+            yilSelect.appendChild(option);
+          });
+        }
+      }
+
+      // Yakıt ve Kasa tiplerini güncelle
+      function updateYakitKasa() {
+        const marka = markaSelect.value;
+        const seri = document.getElementById("seri").value;
+        const ustModel = document.getElementById("ust_model").value;
+        const yakitSelect = document.getElementById("yakit");
+        const kasaSelect = document.getElementById("kasa");
+
+        // Yakıt tipi ve kasa tipi seçeneklerini temizle
+        yakitSelect.innerHTML = '<option value="">Seçin</option>';
+        kasaSelect.innerHTML = '<option value="">Seçin</option>';
+
+        // Yakıt ve Kasa tiplerini varsa ekle
+        if (marka && seri && ustModel) {
+          const yakit = yakit_kasa[seri]?.yakit || [];
+          const kasa = yakit_kasa[seri]?.kasa || {};
+
+          // Yakıt türlerini ekle
+          yakit.forEach((yakitType) => {
+            let option = document.createElement("option");
+            option.value = yakitType;
+            option.textContent = yakitType;
+            yakitSelect.appendChild(option);
+          });
+
+          // Kasa türlerini ekle
+          if (Array.isArray(kasa)) {
+            // Kasa doğrudan dizi ise
+            kasa.forEach((kasaType) => {
+              let option = document.createElement("option");
+              option.value = kasaType;
+              option.textContent = kasaType;
+              kasaSelect.appendChild(option);
+            });
+          } else {
+            // Kasa nesne ise (örneğin SUV: [subType])
+            for (const [kasaType, subTypes] of Object.entries(kasa)) {
+              if (Array.isArray(subTypes)) {
+                // Alt tipler (subTypes) varsa
+                subTypes.forEach((subType) => {
+                  let option = document.createElement("option");
+                  option.value = `${kasaType} - ${subType}`;
+                  option.textContent = `${kasaType} - ${subType}`;
+                  kasaSelect.appendChild(option);
+                });
+              } else {
+                // Alt tipler yoksa, kasa tipini direkt ekle
+                let option = document.createElement("option");
+                option.value = kasaType;
+                option.textContent = kasaType;
+                kasaSelect.appendChild(option);
+              }
+            }
+          }
+        }
+      }
+
+      // Şehirleri ekle
+      const sehirSelect = document.getElementById("sehir");
+      sehir.forEach((sehir) => {
+        let option = document.createElement("option");
+        option.value = sehir;
+        option.textContent = sehir;
+        sehirSelect.appendChild(option);
+      });
+
+      // Renkleri ekle
+      const renkSelect = document.getElementById("renk");
+      renk.forEach((renk) => {
+        let option = document.createElement("option");
+        option.value = renk;
+        option.textContent = renk;
+        renkSelect.appendChild(option);
+      });
+      
+    </script>
+  </body>
+</html>
